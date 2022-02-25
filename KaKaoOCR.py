@@ -2,7 +2,6 @@ import json
 
 import cv2
 import requests
-import sys
 
 LIMIT_PX = 1024
 LIMIT_BYTE = 1024*1024  # 1MB
@@ -36,22 +35,27 @@ def kakao_ocr_resize(image_path: str):
     return None
 
 
-def kakao_ocr(image_path: str, appkey: str):
+def kakao_ocr(image):
     """
     OCR api request example
     :param image_path: 이미지파일 경로
     :param appkey: 카카오 앱 REST API 키
     """
     API_URL = 'https://dapi.kakao.com/v2/vision/text/ocr'
-
+    appkey = "71234b5024f98714a62dfb31d7c988c9"
     headers = {'Authorization': 'KakaoAK {}'.format(appkey)}
 
-    image = cv2.imread(image_path)
     jpeg_image = cv2.imencode(".jpg", image)[1]
     data = jpeg_image.tobytes()
 
-
-    return requests.post(API_URL, headers=headers, files={"image": data})
+    text = ""
+    json_Data=requests.post(API_URL, headers=headers, files={"image": data}).json()
+    for sentence in json_Data['result']:
+        for word in sentence['recognition_words']:
+            text += word
+        else:
+            text +=" "
+    return text
 
 
 def main():
@@ -65,9 +69,10 @@ def main():
     if resize_impath is not None:
         image_path = resize_impath
         print("원본 대신 리사이즈된 이미지를 사용합니다.")
+    img = cv2.imread(image_path)
 
-    output = kakao_ocr(image_path, appkey).json()
-    print("[OCR] output:\n{}\n".format(json.dumps(output, sort_keys=True, indent=2,ensure_ascii=False)))
+    output = kakao_ocr(img)
+    print("[OCR] output:\n{}\n".format(output))
 
 
 if __name__ == "__main__":
