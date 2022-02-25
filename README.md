@@ -16,6 +16,6 @@
 
 ## 2022년 2월 25일 Test OCR 결과
 
-<img src = "asset/65노0887.png" width="720px" height="480px">
+<img src = "asset/65RH0887.png">
 
 위 3가지 중 카카오 API를 사용한 결과이다. 어느 정도 선명한 이미지를 제공한다면은 정확한 문자 인식을 보여주고 있다.
