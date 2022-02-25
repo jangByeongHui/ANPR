@@ -41,7 +41,7 @@ def detect(img):
 if __name__ == '__main__':
     video_path="data/test.mp4"
     cap = cv2.VideoCapture(video_path)
-
+    count=0
     while True:
         ret, frame = cap.read()
 
@@ -49,7 +49,10 @@ if __name__ == '__main__':
             view_img,crop_image = detect(frame)
             for num,i in enumerate(crop_image):
                 cv2.imshow(f'{num}', i)
-                cv2.imshow('Temp_image',  view_img)
+                cv2.imwrite(f'runs/crop/{count}_{num}.jpg',i)
+            cv2.imshow('Temp_image',  view_img)
+            cv2.imwrite(f'runs/view/{count}.jpg',view_img)
+            count+=1
             key = cv2.waitKey(1)
             if key ==27:
                 break
