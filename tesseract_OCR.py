@@ -10,5 +10,5 @@ def Image2String(img):
     return text
 
 if __name__ == "__main__":
-    image = cv2.imread("data/TCmbJ.png")
+    image = cv2.imread("runs/crop/kor.jpeg")
     Image2String(image)

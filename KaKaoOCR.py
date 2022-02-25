@@ -63,8 +63,7 @@ def main():
     # if len(sys.argv) != 3:
     #     print("Please run with args: $ python example.py /path/to/image appkey")
     # image_path, appkey = sys.argv[1], sys.argv[2]
-    appkey = "71234b5024f98714a62dfb31d7c988c9"
-    image_path="data/cam79.png"
+    image_path="runs/crop/kor_crop.png"
     resize_impath = kakao_ocr_resize(image_path)
     if resize_impath is not None:
         image_path = resize_impath

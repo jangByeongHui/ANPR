@@ -10,6 +10,6 @@ def EasyOCR(img):
         text += sentence[-2]
     return text
 if __name__ == "__main__":
-    img_path="runs/crop/102.png"
+    img_path="runs/crop/kor_crop.png"
     img = cv2.imread(img_path)
     print(EasyOCR(img))
