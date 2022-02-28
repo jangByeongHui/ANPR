@@ -1,26 +1,33 @@
 import torch
 import cv2
-from KaKaoOCR import kakao_ocr
-from tesseract_OCR import Image2String
-
+# from KaKaoOCR import kakao_ocr
+# from tesseract_OCR import Image2String
+from Easy_OCR import EasyOCR
+from PIL import Image,ImageDraw,ImageFont
+import matplotlib.pyplot as plt
 import re
+import numpy as np
+import random
 
-
+COLORS = [(218,229,0),(173,0,186),(113,206,0)]
 
 # 영상 폰트
-font = cv2.FONT_HERSHEY_SIMPLEX  # 글씨 폰트
+# font = cv2.FONT_HERSHEY_SIMPLEX  # 글씨 폰트
 
 #차량번호 정규표현식
 re_car_num = re.compile('/^\D{2}\d{2}\D\d{4}$/')
 
 #yolov5 모델 로드
-model = torch.hub.load('yolov5','custom',path='car_plate_v1.pt',source='local') #yolov5 모델 load
+model = torch.hub.load('yolov5','custom',path='ANPR_V1.pt',source='local') #yolov5 모델 load
 # model.classes=[2] # 차량만 검출
 # model.conf=0.5
 
 def detect(img):
     detects = model(img,size=640)
+    
     crop_image=[]
+    font = ImageFont.truetype("fonts/DejaVuSansMono.ttf",20)
+    
     for num,det in enumerate(detects.pandas().xyxy[0].values.tolist()):
         #Detect 결과
         [x1,y1,x2,y2,conf,cls,name] = det
@@ -28,12 +35,30 @@ def detect(img):
         y1 = int(y1)
         x2 = int(x2)
         y2 = int(y2)
-        crop_image.append(img[y1:y2, x1:x2])
-        cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)  # bounding box
-        CarNumber = kakao_ocr(img[y1:y2,x1:x2])
-        if CarNumber is not None:
-             cv2.putText(img,CarNumber, (x2, y1 - 5), font, 0.5, (0, 255, 0), 2)  # 차량번호
-        cv2.putText(img, "{:.2f}".format(conf), (x1, y1 - 5), font, 0.5, (255, 0, 0), 2)  # 정확도
+        cls=int(cls)
+        
+        if cls == 1:
+            
+            car_plate = img[y1:y2, x1:x2]
+            crop_image.append(car_plate)
+            CarNumber = EasyOCR(img[y1:y2,x1:x2])
+            if CarNumber !="":
+                img=Image.fromarray(img)
+                draw = ImageDraw.Draw(img)
+                draw.text((x2, y1 - 5), CarNumber , font=font, fill=COLORS[cls])  # 정확도
+            
+                
+        else:
+            img=Image.fromarray(img)
+            draw = ImageDraw.Draw(img)
+           
+        # img=Image.fromarray(img)
+        # draw = ImageDraw.Draw(img)
+        
+        draw.rectangle(((x1, y1), (x2, y2)), outline=COLORS[cls], width=2)  # bounding box
+        draw.text((x1, y1 - 5), "{:.2f}".format(conf) , font=font, fill=COLORS[cls])  # 정확도
+        img=np.array(img)
+
     return img,crop_image
 
 
@@ -48,15 +73,14 @@ if __name__ == '__main__':
         if ret:
             view_img,crop_image = detect(frame)
             for num,i in enumerate(crop_image):
-                cv2.imshow(f'{num}', i)
                 cv2.imwrite(f'runs/crop/{count}_{num}.jpg',i)
-            cv2.imshow('Temp_image',  view_img)
+            #cv2.imshow("View_img",view_img)
+            # plt.show()
             cv2.imwrite(f'runs/view/{count}.jpg',view_img)
             count+=1
-            key = cv2.waitKey(1)
-            if key ==27:
-                break
-
+            # key = cv2.waitKey(1)
+            # if key ==27:
+            #     break
         else:
             cap.release()
             break
