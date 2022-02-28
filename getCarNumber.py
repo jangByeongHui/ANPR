@@ -26,7 +26,7 @@ def detect(img):
     detects = model(img,size=640)
     
     crop_image=[]
-    font = ImageFont.truetype("fonts/DejaVuSansMono.ttf",20)
+    font = ImageFont.truetype("fonts/DejaVuSansMono.ttf",16)
     
     for num,det in enumerate(detects.pandas().xyxy[0].values.tolist()):
         #Detect 결과
@@ -45,7 +45,7 @@ def detect(img):
             if CarNumber !="":
                 img=Image.fromarray(img)
                 draw = ImageDraw.Draw(img)
-                draw.text((x2, y1 - 5), CarNumber , font=font, fill=COLORS[cls])  # 정확도
+                draw.text((x2, y1-35), CarNumber , font=font, fill=COLORS[cls],stroke_width=1)
             
                 
         else:
@@ -56,7 +56,7 @@ def detect(img):
         # draw = ImageDraw.Draw(img)
         
         draw.rectangle(((x1, y1), (x2, y2)), outline=COLORS[cls], width=2)  # bounding box
-        draw.text((x1, y1 - 5), "{:.2f}".format(conf) , font=font, fill=COLORS[cls])  # 정확도
+        draw.text((x1-16, y1 - 16), "{}".format(name) , font=font, fill=COLORS[cls])  # 정확도
         img=np.array(img)
 
     return img,crop_image
