@@ -26,7 +26,7 @@ def detect(img):
     detects = model(img,size=640)
     
     crop_image=[]
-    font = ImageFont.truetype("fonts/DejaVuSansMono.ttf",16)
+    font = ImageFont.truetype("fonts/DejaVuSansMono.ttf",20)
     
     for num,det in enumerate(detects.pandas().xyxy[0].values.tolist()):
         #Detect 결과
@@ -45,18 +45,19 @@ def detect(img):
             if CarNumber !="":
                 img=Image.fromarray(img)
                 draw = ImageDraw.Draw(img)
-                draw.text((x2, y1-35), CarNumber , font=font, fill=COLORS[cls],stroke_width=1)
-            
-                
+                draw.rectangle(((x1, y1), (x2, y2)), outline=COLORS[cls], width=2)  # bounding box
+                draw.text((x1, y1-20), CarNumber , font=font, fill=COLORS[cls],stroke_width=1)
+                 
         else:
             img=Image.fromarray(img)
             draw = ImageDraw.Draw(img)
+            draw.rectangle(((x1, y1), (x2, y2)), outline=COLORS[cls], width=2)  # bounding box
+            draw.text((x1, y1 - 20), name , font=font, fill=COLORS[cls])  # 정확도
            
         # img=Image.fromarray(img)
         # draw = ImageDraw.Draw(img)
         
-        draw.rectangle(((x1, y1), (x2, y2)), outline=COLORS[cls], width=2)  # bounding box
-        draw.text((x1-16, y1 - 16), "{}".format(name) , font=font, fill=COLORS[cls])  # 정확도
+        
         img=np.array(img)
 
     return img,crop_image
@@ -64,7 +65,7 @@ def detect(img):
 
 
 if __name__ == '__main__':
-    video_path="data/test.mp4"
+    video_path="data/test2.mp4"
     cap = cv2.VideoCapture(video_path)
     count=0
     while True:
