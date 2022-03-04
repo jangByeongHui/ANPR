@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import re
 import numpy as np
 import random
+from Houghline import TransHough
 
 COLORS = [(218,229,0),(173,0,186),(113,206,0)]
 
@@ -23,6 +24,7 @@ model = torch.hub.load('yolov5','custom',path='ANPR_V1.pt',source='local') #yolo
 # model.conf=0.5
 
 def detect(img):
+    img = TransHough(img)
     detects = model(img,size=640)
     
     crop_image=[]
@@ -40,6 +42,7 @@ def detect(img):
         if cls == 1:
             
             car_plate = img[y1:y2, x1:x2]
+            car_plate = cv2.cvtColor(car_plate,cv2.COLOR_BGR2GRAY)
             crop_image.append(car_plate)
             CarNumber = EasyOCR(img[y1:y2,x1:x2])
             if CarNumber !="":
