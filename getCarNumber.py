@@ -34,7 +34,7 @@ def detect(img):
     detects = model(img,size=640)
     
     crop_image=[]
-    font = ImageFont.truetype("/usr/share/fonts/nanum/NanumBrush.ttf",20)
+    font = ImageFont.truetype("/usr/share/fonts/NanumFont/NanumGothicExtraBold.ttf",30)
     
     for num,det in enumerate(detects.pandas().xyxy[0].values.tolist()):
         #Detect 결과
