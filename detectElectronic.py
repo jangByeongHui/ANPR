@@ -8,9 +8,36 @@ LowVal=0
 HighHue=0
 HighSat=0
 HighVal=0
-def isElectronic(img):
-    cv2.imshow('Test',img)
-    return True
+
+def isElectronic(img,thr):
+
+    preprocessin_img = getElectronicColor(img)
+    imgGray = cv2.cvtColor(preprocessin_img, cv2.COLOR_BGR2GRAY)
+    imgBlur = cv2.GaussianBlur(imgGray, (3, 3), 1)
+    imgThreshold = cv2.adaptiveThreshold(imgBlur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 19, 17)
+
+    imgMedian = cv2.medianBlur(imgThreshold, 5)
+    kernel = np.ones((3, 3), np.int8)
+    imgDilate = cv2.dilate(imgMedian, kernel, iterations=1)
+
+    count = cv2.countNonZero(imgDilate)
+
+    if count>thr:
+        return True,count
+    else:
+        return False,count
+
+def getElectronicColor(img):
+    hsvLower = np.array([94, 56,70])  # 추출할 색의 하한(HSV)
+    hsvUpper = np.array([104, 233, 155])  # 추출할 색의 상한(HSV)
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # 이미지를 HSV으로
+
+    hsv_mask = cv2.inRange(hsv, hsvLower, hsvUpper)  # HSV에서 마스크를 작성
+
+    result = cv2.bitwise_and(img, img, mask=hsv_mask)
+
+    return result
+
 
 def findElectronic(img):
     global LowHue,LowSat,LowVal,HighHue,HighSat,HighVal
@@ -64,6 +91,8 @@ def findElectronic(img):
             print("-----------------------\n")
             break
 
+    return result
+
 
 def onChange(pos):
     print("-----------------------")
@@ -74,8 +103,10 @@ def onChange(pos):
 
 
 if __name__ == '__main__':
-    test_img_path ="runs/test.jpg_resized.jpeg"
+    test_img_path ="runs/crop/kor_crop.jpg"
 
     test_img = cv2.imread(test_img_path)
 
-    findElectronic(test_img)
+    _,pixel_count = isElectronic(test_img,2000)
+
+    print(pixel_count)
