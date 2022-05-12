@@ -39,9 +39,9 @@ def detect(img):
 
 if __name__ == '__main__':
     img_path = 'runs/test.jpg'
-    img = cv2.imread(img_path)
+    Img = cv2.imread(img_path)
 
-    view_img = detect(img)
+    view_img = detect(Img)
 
     cv2.imshow('View',view_img)
     while True:
