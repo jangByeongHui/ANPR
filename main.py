@@ -6,12 +6,12 @@ COLORS = [(218,229,0),(173,0,186),(113,206,0)]
 
 
 #yolov5 모델 로드
-model = torch.hub.load('yolov5','custom',path='ANPR_V2.pt',source='local') #yolov5 모델 load
+model = torch.hub.load('ultralytics/yolov5','custom',path = 'ALPR_V1.pt',force_reload=True) #yolov5 모델 load
 
 
 def detect(img):
 
-    detects = model(img,size=416)
+    detects = model(img)
 
     for num,det in enumerate(detects.pandas().xyxy[0].values.tolist()):
 
