@@ -76,5 +76,7 @@ if __name__ == '__main__':
         if ret:
             view_img = detect(frame,f'{vid_path}_{frame_count}')
             cv2.imwrite(f'{vid_path}_{frame_count}_result.jpg', view_img)
+            frame_count += 1
         else:
             cap.release()
+            break
