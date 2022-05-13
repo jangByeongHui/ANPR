@@ -1,14 +1,22 @@
 import torch
 import cv2
+import easyocr
 from util.detectElectronic import isElectronic
 from util.KaKaoOCR import kakao_ocr
-from util.Easy_OCR import EasyOCR
+
 COLORS = [(218,229,0),(173,0,186),(113,206,0)]
 
 
 #yolov5 모델 로드
 model = torch.hub.load('ultralytics/yolov5','custom',path = 'ALPR_V2.pt',force_reload=True) #yolov5 모델 load
+reader = easyocr.Reader(['ko', 'en'], gpu=True)
 
+def EasyOCR(img_path):
+    result = reader.readtext(img_path)
+    text = ""
+    for sentence in result:
+        text += sentence[-2]
+    return text
 
 def detect(img_path):
     img = cv2.imread(img_path)
@@ -32,14 +40,13 @@ def detect(img_path):
             # 친환경 전기차 인경우
             print(f'친환경 자동차 OCR : {OCR_result}')
             # Using cv2.putText() method
-            img = cv2.putText(img, 'Electronic', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
-                                0.3, (255, 0, 0), 2, cv2.LINE_AA)
+            # img = cv2.putText(img, 'Electronic', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+            #                     0.3, (255, 0, 0), 2, cv2.LINE_AA)
         else:
             # 친환경 자동차 아님
             print(f'일반 자동차 OCR : {OCR_result}')
-            img = cv2.putText(img, 'Non-Electronic', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
-                              0.3, (0, 255, 0), 2, cv2.LINE_AA)
 
+        img = cv2.putText(img,f'{name} {conf}', (x1,y1-10), cv2.FONT_HERSHEY_SIMPLEX,0.5, COLORS[cls], 2, cv2.LINE_AA)
         img = cv2.rectangle(img,(x1,y1),(x2,y2),COLORS[cls],2)
 
     return img
