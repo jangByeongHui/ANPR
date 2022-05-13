@@ -29,7 +29,7 @@ def isElectronic(img,thr):
 
 def getElectronicColor(img):
     hsvLower = np.array([94, 56,70])  # 추출할 색의 하한(HSV)
-    hsvUpper = np.array([104, 233, 155])  # 추출할 색의 상한(HSV)
+    hsvUpper = np.array([104, 233, 255])  # 추출할 색의 상한(HSV)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # 이미지를 HSV으로
 
     hsv_mask = cv2.inRange(hsv, hsvLower, hsvUpper)  # HSV에서 마스크를 작성
@@ -103,10 +103,10 @@ def onChange(pos):
 
 
 if __name__ == '__main__':
-    test_img_path ="runs/crop/kor_crop.jpg"
+    test_img_path ="runs/blue2.jpg"
 
     test_img = cv2.imread(test_img_path)
-
+    # findElectronic(test_img) #HSV 값 추출시 사용
     _,pixel_count = isElectronic(test_img,2000)
 
     print(pixel_count)
