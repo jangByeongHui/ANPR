@@ -49,6 +49,6 @@ if __name__ == '__main__':
     img_path = ['runs/test/0.png','runs/test/1.png','runs/test/2.png','runs/test/3.png']
 
     for img in img_path:
-        Img = cv2.imread(img_path)
+        Img = cv2.imread(img)
         view_img = detect(Img)
         cv2.imwrite(f'result.jpg',view_img)
