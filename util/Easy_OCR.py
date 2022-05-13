@@ -1,9 +1,9 @@
 import cv2
 import easyocr
 
-def EasyOCR(img):
-    reader = easyocr.Reader(['ko','en'],gpu=False)
-    result = reader.readtext(img)
+def EasyOCR(img_path):
+    reader = easyocr.Reader(['ko','en'],gpu=True)
+    result = reader.readtext(img_path)
     text=""
     for sentence in result:
         text += sentence[-2]

@@ -1,7 +1,7 @@
 import torch
 import cv2
 from util.detectElectronic import isElectronic
-
+from util.Easy_OCR import EasyOCR
 COLORS = [(218,229,0),(173,0,186),(113,206,0)]
 
 
@@ -24,19 +24,20 @@ def detect(img):
         y2 = int(y2)
         cls=int(cls)
 
-
+        cv2.imwrite('crop_img', img[y1:y2, x1:x2])
+        OCR_result = EasyOCR('crop_img')
         if isElectronic(img[y1:y2,x1:x2],2000):
             # 친환경 전기차 인경우
-            print("친환경 자동차 OCR 실행")
+            print(f'친환경 자동차 OCR : {OCR_result}')
             # Using cv2.putText() method
             img = cv2.putText(img, 'Electronic', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
                                 0.3, (255, 0, 0), 2, cv2.LINE_AA)
         else:
             # 친환경 자동차 아님
-            print("OCR 미실행")
+            print(f'OCR 미실행 : {OCR_result}')
             img = cv2.putText(img, 'Non-Electronic', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
                               0.3, (0, 255, 0), 2, cv2.LINE_AA)
-        cv2.imshow('crop_img', img[y1:y2, x1:x2])
+
         img = cv2.rectangle(img,(x1,y1),(x2,y2),COLORS[cls],2)
 
     return img
@@ -49,10 +50,4 @@ if __name__ == '__main__':
     Img = cv2.imread(img_path)
 
     view_img = detect(Img)
-
-    cv2.imshow('View',view_img)
-    while True:
-        status = cv2.waitKey(1)
-
-        if status==27:
-            break
+    cv2.imwrite(f'result.jpg',view_img)
