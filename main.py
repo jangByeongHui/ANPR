@@ -34,8 +34,8 @@ def detect(img_path):
         cls=int(cls)
 
         cv2.imwrite(f'{img_path}_crop_img.png', img[y1:y2, x1:x2])
-        # OCR_result = EasyOCR(f'{img_path}_crop_img.png')
-        OCR_result = kakao_ocr(img[y1:y2, x1:x2])
+        OCR_result = EasyOCR(f'{img_path}_crop_img.png')
+        # OCR_result = kakao_ocr(img[y1:y2, x1:x2])
         if isElectronic(img[y1:y2,x1:x2],100)[0]:
             # 친환경 전기차 인경우
             print(f'친환경 자동차 OCR : {OCR_result}')
