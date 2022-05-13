@@ -9,8 +9,8 @@ COLORS = [(218,229,0),(173,0,186),(113,206,0)]
 model = torch.hub.load('ultralytics/yolov5','custom',path = 'ALPR_V1.pt',force_reload=True) #yolov5 모델 load
 
 
-def detect(img):
-
+def detect(img_path):
+    img = cv2.imread(img_path)
     detects = model(img)
 
     for num,det in enumerate(detects.pandas().xyxy[0].values.tolist()):
@@ -24,8 +24,8 @@ def detect(img):
         y2 = int(y2)
         cls=int(cls)
 
-        cv2.imwrite('crop_img.jpg', img[y1:y2, x1:x2])
-        OCR_result = EasyOCR('crop_img.jpg')
+        cv2.imwrite(f'{img_path}_crop_img.png', img[y1:y2, x1:x2])
+        OCR_result = EasyOCR(f'{img_path}_crop_img.png')
         if isElectronic(img[y1:y2,x1:x2],100)[0]:
             # 친환경 전기차 인경우
             print(f'친환경 자동차 OCR : {OCR_result}')
@@ -49,6 +49,5 @@ if __name__ == '__main__':
     img_path = ['runs/test/0.png','runs/test/1.png','runs/test/2.png','runs/test/3.png','runs/test/4.png']
 
     for img in img_path:
-        Img = cv2.imread(img)
-        view_img = detect(Img)
+        view_img = detect(img)
         cv2.imwrite(f'{img}_result.jpg',view_img)
