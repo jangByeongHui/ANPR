@@ -1,12 +1,13 @@
 import torch
 import cv2
 from util.detectElectronic import isElectronic
+from util.KaKaoOCR import kakao_ocr
 from util.Easy_OCR import EasyOCR
 COLORS = [(218,229,0),(173,0,186),(113,206,0)]
 
 
 #yolov5 모델 로드
-model = torch.hub.load('ultralytics/yolov5','custom',path = 'ALPR_V1.pt',force_reload=True) #yolov5 모델 load
+model = torch.hub.load('ultralytics/yolov5','custom',path = 'ALPR_V2.pt',force_reload=True) #yolov5 모델 load
 
 
 def detect(img_path):
@@ -25,7 +26,8 @@ def detect(img_path):
         cls=int(cls)
 
         cv2.imwrite(f'{img_path}_crop_img.png', img[y1:y2, x1:x2])
-        OCR_result = EasyOCR(f'{img_path}_crop_img.png')
+        # OCR_result = EasyOCR(f'{img_path}_crop_img.png')
+        OCR_result = kakao_ocr(img[y1:y2, x1:x2])
         if isElectronic(img[y1:y2,x1:x2],100)[0]:
             # 친환경 전기차 인경우
             print(f'친환경 자동차 OCR : {OCR_result}')
