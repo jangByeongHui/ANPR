@@ -24,8 +24,8 @@ def detect(img):
         y2 = int(y2)
         cls=int(cls)
 
-        cv2.imwrite('crop_img', img[y1:y2, x1:x2])
-        OCR_result = EasyOCR('crop_img')
+        cv2.imwrite('crop_img.jpg', img[y1:y2, x1:x2])
+        OCR_result = EasyOCR('crop_img.jpg')
         if isElectronic(img[y1:y2,x1:x2],2000):
             # 친환경 전기차 인경우
             print(f'친환경 자동차 OCR : {OCR_result}')
