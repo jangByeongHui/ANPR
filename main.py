@@ -69,10 +69,10 @@ if __name__ == '__main__':
     vid_path="data/test.mp4"
 
     cap = cv2.VideoCapture(vid_path)
-
+    frame_count = 0
     while True:
         ret,frame = cap.read()
-        frame_count = 0
+
         if ret:
             view_img = detect(frame,f'{vid_path}_{frame_count}')
             cv2.imwrite(f'{vid_path}_{frame_count}_result.jpg', view_img)
