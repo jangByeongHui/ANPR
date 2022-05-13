@@ -18,8 +18,8 @@ def EasyOCR(img_path):
         text += sentence[-2]
     return text
 
-def detect(img_path):
-    img = cv2.imread(img_path)
+def detect(img,img_path):
+
     detects = model(img)
 
     for num,det in enumerate(detects.pandas().xyxy[0].values.tolist()):
@@ -55,8 +55,26 @@ def detect(img_path):
 
 
 if __name__ == '__main__':
-    img_path = ['runs/test/0.png','runs/test/1.png','runs/test/2.png','runs/test/3.png','runs/test/4.png']
 
-    for img in img_path:
-        view_img = detect(img)
-        cv2.imwrite(f'{img}_result.jpg',view_img)
+    # 이미지
+    img_path_LIST = ['runs/test/0.png','runs/test/1.png','runs/test/2.png','runs/test/3.png','runs/test/4.png']
+
+    for img_path in img_path_LIST:
+        Img = cv2.imread(img_path)
+        view_img = detect(Img,img_path)
+        cv2.imwrite(f'{img_path}_result.jpg',view_img)
+
+
+    # 비디오
+    vid_path=""
+
+    cap = cv2.VideoCapture(vid_path)
+
+    while True:
+        ret,frame = cap.read()
+        frame_count = 0
+        if ret:
+            view_img = detect(frame,f'{vid_path}_{frame_count}')
+            cv2.imwrite(f'{vid_path}_{frame_count}_result.jpg', view_img)
+        else:
+            cap.release()
