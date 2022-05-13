@@ -1,6 +1,6 @@
 import torch
 import cv2
-from detectElectronic import isElectronic
+from util.detectElectronic import isElectronic
 
 COLORS = [(218,229,0),(173,0,186),(113,206,0)]
 
@@ -23,12 +23,18 @@ def detect(img):
         x2 = int(x2)
         y2 = int(y2)
         cls=int(cls)
+
+
         if isElectronic(img[y1:y2,x1:x2],2000):
             # 친환경 전기차 인경우
             print("친환경 자동차 OCR 실행")
+            # Using cv2.putText() method
+            img = cv2.putText(img, 'Electronic', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                                1, (255, 0, 0), 2, cv2.LINE_AA)
         else:
             # 친환경 자동차 아님
             print("OCR 미실행")
+        cv2.imshow('crop_img', img[y1:y2, x1:x2])
         img = cv2.rectangle(img,(x1,y1),(x2,y2),COLORS[cls],2)
 
 
