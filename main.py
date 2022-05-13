@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
 
     # 비디오
-    vid_path=""
+    vid_path="data/test.mp4"
 
     cap = cv2.VideoCapture(vid_path)
 
