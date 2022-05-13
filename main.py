@@ -26,7 +26,7 @@ def detect(img):
 
         cv2.imwrite('crop_img.jpg', img[y1:y2, x1:x2])
         OCR_result = EasyOCR('crop_img.jpg')
-        if isElectronic(img[y1:y2,x1:x2],2000):
+        if isElectronic(img[y1:y2,x1:x2],100)[0]:
             # 친환경 전기차 인경우
             print(f'친환경 자동차 OCR : {OCR_result}')
             # Using cv2.putText() method
@@ -34,7 +34,7 @@ def detect(img):
                                 0.3, (255, 0, 0), 2, cv2.LINE_AA)
         else:
             # 친환경 자동차 아님
-            print(f'OCR 미실행 : {OCR_result}')
+            print(f'일반 자동차 OCR : {OCR_result}')
             img = cv2.putText(img, 'Non-Electronic', (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
                               0.3, (0, 255, 0), 2, cv2.LINE_AA)
 
@@ -51,4 +51,4 @@ if __name__ == '__main__':
     for img in img_path:
         Img = cv2.imread(img)
         view_img = detect(Img)
-        cv2.imwrite(f'result.jpg',view_img)
+        cv2.imwrite(f'{img}_result.jpg',view_img)
