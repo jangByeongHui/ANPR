@@ -46,7 +46,7 @@ def detect(img):
 
 
 if __name__ == '__main__':
-    img_path = ['runs/test/0.png','runs/test/1.png','runs/test/2.png','runs/test/3.png']
+    img_path = ['runs/test/0.png','runs/test/1.png','runs/test/2.png','runs/test/3.png','runs/test/4.png']
 
     for img in img_path:
         Img = cv2.imread(img)
