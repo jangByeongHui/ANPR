@@ -8,7 +8,7 @@ COLORS = [(218,229,0),(173,0,186),(113,206,0)]
 
 
 #yolov5 모델 로드
-model = torch.hub.load('ultralytics/yolov5','custom',path = 'ALPR_V2.pt',force_reload=True) #yolov5 모델 load
+model = torch.hub.load('ultralytics/yolov5','custom',path = 'ALPR_V1.pt',force_reload=True) #yolov5 모델 load
 reader = easyocr.Reader(['ko', 'en'], gpu=True)
 
 def EasyOCR(img_path):
