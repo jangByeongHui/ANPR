@@ -1,6 +1,7 @@
 # pip install -r requirements.txt
 
-# KAKAO OCR -----------------------------
+# Easy OCR -----------------------------
+easy-ocr
 
 
 # Base ----------------------------------------
